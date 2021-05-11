@@ -1,0 +1,18 @@
+0) you will need a github account
+
+1) open terminal, go to location where you want to add this github repository/folder (by typing cd *location); add a github repository
+git clone https://github.com/monikajozsa/synapticswitch
+you will need your username and password that you chose in step 0)
+
+2) now you have a folder that you can manage out of the terminal, you can add and delete folders and files BUT it will not be visible to me unless you do the following
+
+3) to save whatever you did, you need to do three things (terminal at the github location)
+1. git add .
+2. git commit -m "short description of change"
+3*. git push origin main
+when you first do 3. it needs an extra -u so it is "git push -u origin main"
+
+4) IMPORTANT - before you edit the folder next time, to see what I did in the meantime, you need to "refresh" your github folder (EVERY TIME)
+you do this by typing (terminal at the github location)
+git pull origin main
+requires username and password
