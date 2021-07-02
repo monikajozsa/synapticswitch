@@ -1,0 +1,248 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1671\cocoasubrtf600
+{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red251\green2\blue7;\red237\green142\blue19;\red35\green255\blue6;
+\red253\green139\blue9;\red0\green0\blue0;\red191\green0\blue191;\red251\green0\blue7;\red251\green0\blue255;
+}
+{\*\expandedcolortbl;;\cssrgb\c100000\c14913\c0;\csgenericrgb\c92941\c55686\c7451;\cssrgb\c0\c100000\c0;
+\cssrgb\c100000\c61456\c0;\cssrgb\c0\c0\c0;\csgenericrgb\c74902\c0\c74902;\cssrgb\c100000\c12195\c0;\cssrgb\c100000\c7248\c100000;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww46820\viewh25540\viewkind0
+\deftab720
+\pard\pardeftab720\partightenfactor0
+
+\f0\fs24 \cf2 The \'93data\'94 folder contains all the data files. The scripts folder contains all the scripts that generated the files in folder \'93data\'94. The \'93plots\'94 folder contains figures and scripts that generated those figures.\
+\
+Below, we list the files in the \'93scripts\'94 folder folder and add the dependencies of the files. \
+\
+FOLDER scripts/Gillespie_and_Distribution:\cf3 \
+\
+function\cf0  [xbar,W,rate_constants] = \cf4 GenConstants_EI\cf0 (Nspecies,xbar_interval,rate_const_interval,IE_ratio, W_force)\
+- functions used: none\
+\
+\cf3 function\cf0  [X,T] = \cf4 Gillespie_EI\cf0 (xbar,rate_constants,N_steps,N_realisations)\
+- functions used: Rates_EI\
+\
+\cf3 function\cf0  rates = \cf4 Rates_EI\cf0 (x,xbar,rate_constants,eps_local)\
+- functions used: none\
+\
+\cf3 function\cf0  [H_sparse,W_sparse,H_sparse_1D,max_XX] = \cf4 Sparse_Distribution_EI\cf0 (X,T)\
+- functions used: H_to_H1D, H1D_to_H\
+\
+\cf3 function\cf0  H = \cf4 H1D_to_H\cf0 (H_1D,Nspecies)\
+- functions used: none\
+\
+\cf3 function \cf0 H_1D = \cf4 H_to_H1D\cf0 (H,max_grid)\
+- functions used: none\
+\
+\cf3 function \cf0 H  = \cf4 Marginal_Sparse_to_grid\cf0 (H_sparse,W_sparse,ind_1_2)\
+- functions used: none\
+\
+\cf2 FOLDER scripts/shared_functions:\
+\
+\cf3 function \cf0 cm_data=\cf4 viridis\cf0 (n_colors)\
+- functions used: none\
+\cf3 \
+function \cf0 cm_data=\cf4 plasma\cf0 (n_colors)\
+- functions used: none\
+\
+\cf3 function \cf0 colors = \cf4 distinguishable_colors\cf0 (n_colors,bg,func)\
+- functions used: none\
+\cf3 \
+function\cf0  W = \cf4 W_list\cf0 (Nspecies,nA)\
+- functions used: none\
+\cf3 \
+function \cf0 L = \cf4 LogMat\cf0 (n,allS)\
+- functions used: none\
+\
+\cf3 function \cf0 h = \cf4 error_ellipse\cf0 (covariance_mtx,mean_vec)\
+- functions used: none\
+\
+\cf3 function \cf0 Center = \cf4 Sparse_Distribution_weighted_mean\cf0 (H_sparse,W_sparse,isShifted)\
+- functions used: none\
+\
+\pard\pardeftab720\partightenfactor0
+\cf5 function\cf0  [nn_eq,Cov_LNA,P_out] = \cf4 automatic_LNA\cf0 (k,x_bar,W,epsilon,lambda)\
+- functions used: none\
+\pard\pardeftab720\partightenfactor0
+\cf3 \
+function \cf0 [Weighted_Cov,Weighted_Mean] = \cf4 Sparse_Distribution_weighted_cov\cf0 (H_sparse,W_sparse, Weighted_Mean)\
+- functions used: Sparse_Distribution_weighted_mean\
+\
+\cf3 function\cf0  [] = \cf4 Plot_stationary_distrib\cf0 (H,W,Nspecies)\
+- functions used: Marginal_Sparse_to_grid\cf3 \
+\
+\cf2 FOLDER scripts/mode_search:\
+\cf3 \
+function\cf0  [D_vec, clp_ind] = \cf4 Closest_larger_point\cf0 (local_max_sub,local_max_val,selected_ind)\
+- functions used: none\
+\cf3 \
+function\cf0  loc_max_mode_id = \cf4 loc_max_mode_id_from_kept\cf0 (loc_max_mode_id,local_max_sub,kept_lmax_ind,clp_pointer)\
+- functions used: none\
+\cf3 \
+function \cf0 min_ridge_val = \cf4 RidgeMin\cf0 (point_from_ind, point_to_ind, H_sparse, W_sparse, neighbours_ind)\
+- functions used: none\
+\cf3 \
+function\cf0  points_id = \cf4 Sparse_Distribution_pointer_point_ID\cf0 (H_sparse_1D,W_sparse,local_max_ind, neighbours_val,neighbours_ind,max_neighbour_ind_nb)\
+- functions used: none\cf3 \
+\cf0 \
+\cf3 function\cf0  [Mode_weights,Mode_peaks,Mode_centers] = \cf4 Sparse_Density_Mode_Features\cf0 (H_sparse, W_sparse, points_mode_id)\
+- functions used: Sparse_Distribution_weighted_mean\cf3 \
+\
+function \cf0 [neighbours_1D, neighbours_val, neighbours_ind] = \cf4 Sparse_Distribution_Ext_neighbours_1D\cf0 (H_sparse_1D,W_sparse,grid_max)\
+- functions used: LogMat\
+\
+\cf3 function \cf0 [local_max_sub, local_max_val,local_max_1D, local_max_ind, neighbours_1D, neighbours_val, neighbours_ind, max_neighbour_local_ind] = \cf4 Sparse_Distribution_Ext_local_max_1D\cf0 (H_sparse, W_sparse, H_sparse_1D)\
+- functions used: Sparse_Distribution_Ext_neighbours_1D\
+\cf3 \
+function\cf0  [W_sparse_filt,local_max_sub, local_max_val,local_max_ind, neighbours_1D, neighbours_val, neighbours_ind, max_neighbour_local_ind] = \cf4 Local_Averaging\cf0 (W_sparse, H_sparse, H_sparse_1D, neighbours_val)\
+- functions used: Sparse_Distribution_Ext_local_max_1D\cf3 \
+\
+function\cf0  [local_max_sub, local_max_val, p_ind, p_pointer, clp_pointer, max_Nmodes] = \cf4 DropingCloseLocMax\cf0 (local_max_sub, local_max_val, max_Nmodes, dist_th, H, W, CoordScale_for_dist)\
+- functions used: Sparse_Distribution_weighted_cov, Closest_larger_point, \
+\cf3 \
+function \cf0 [peaks_sub, peaks_val, peaks_ind, peaks_from_local_max_ind] = \cf4 Peak_Selection\cf0 (local_max_sub, local_max_val, local_max_ind, H, W, neighbours_ind, maxNmodes, CoordScale_for_dist)\
+- functions used: Sparse_Distribution_weighted_cov, RidgeMin\
+\cf3 \
+function\cf0  [MaxMode,NofModes,points_mode_id,Mode_peaks,Mode_centers] = \cf4 LargestMode_complete_alg\cf0 (H, W, H_1D, Prop_th, xbar, CoordScale_for_dist)\
+- functions used: Sparse_Distribution_Ext_local_max_1D, Sparse_Distribution_weighted_cov, Closest_larger_point, DropingCloseLocMax_v2, Peak_Selection_v4, loc_max_mode_id_from_kept, Sparse_Distribution_pointer_point_ID, Sparse_Density_Mode_Features, Sparse_Density_Mode_Features\
+\
+\pard\pardeftab720\partightenfactor0
+\cf5 function\cf0  points_mode_id = \cf4 ModeSelection\cf0 (H, W, H_1D, xbar)\
+-function used: Sparse_Distribution_Ext_local_max_1D, DropingCloseLocMax, Local_Averaging, H_to_H1D, Peak_Selection_v2, Closest_larger_point, loc_max_mode_id_from_kept, Sparse_Distribution_pointer_point_ID\
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 FOLDER scripts/data_generation/data_2D/Data_dwell_time:\
+\
+\cf4 DataGen_dwell_time.m\cf6 : generates \cf7 Data_dwell_time_distr.mat\cf2 \
+\cf0 -function used: GenConstants_EI, Gillespie_EI, Sparse_Distribution_EI\
+\cf2 \
+FOLDER scripts/data_generation/data_2D/Dynamic_Toggle_Switch\
+\
+\cf4 DataGen_main.m: \cf6 generates \cf7 Changing_k.mat\cf0 , \cf7 Changing_delta_n.mat, Changing_n_0.mat\cf0 , \cf7 Changing_t_act.mat\cf0 , \cf7 Changing_m_inp.mat\cf0 , \cf7 Changing_t_per.mat\cf0 , \cf7 Changing_t_dur.mat\cf0 , \cf7 Changing_x_0.mat\cf0 \
+-function used: GenData_Changing_param\
+\cf4 \
+\pard\pardeftab720\partightenfactor0
+\cf5 function \cf0 [] = \cf4 GenData_Changing_param\cf0 (Save_filename,var_name,var_values,baseline_val,N_realisations,N_steps,save_n_change)\
+-function used: GenConstants_EI, Gillespie_dyn_inp_v3, Avg_Stats_from_data, ModeSwitch_ind\
+Stats_inp_activation\
+\pard\pardeftab720\partightenfactor0
+\cf4 \
+\pard\pardeftab720\partightenfactor0
+\cf5 function\cf0  [X,T,Xbar_change,Xbar_avg,inp_activation] = \cf4 Gillespie_dyn_inp\cf0 (xbar,rate_constants,N_steps,N_realisations,modes_func,mode_effect_xbar,mode_time_th,inp_freq,inp_duration,inp_rate_addition,x_0)\
+-function used: Reaction_funct\cf6 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 FOLDER scripts/data_generation/data_2D/Dynamic_Toggle_Switch/\cf8 Helper functions:\
+\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf5 function\cf0  [Lifetime, Survived, Death_ind, Blown_up_ind] = \cf4 Avg_Stats_from_data\cf0 (T,X,N_real)\cf6 \
+\pard\pardeftab720\partightenfactor0
+\cf0 - functions used: none\cf3 \
+\pard\pardeftab720\partightenfactor0
+\cf5 \
+function\cf0  [avgswitch_ind, avgduration_ind] = \cf4 ModeSwitch_ind\cf0 (Xbar_change,N_realisations)\
+- functions used: none\cf3 \
+\cf5 \
+function\cf0  [x,t,tau,xbar,Xbar_change,change_ind,changed_reac_happened] = \cf4 Reaction_funct\cf0 (xbar,t,x,r,rate_constants,tau,mode_effect_xbar,change_ind,mode_ind,rch_addition)\
+- functions used: Rates_EI\cf3 \
+\cf5 \
+function\cf0  [inp_avgfreq_inp, inp_avgduration_ind] = \cf4 Stats_inp_activation\cf0 (inp_activation,N_realisations)\
+- functions used: none\cf3 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+FOLDER scripts/data_generation/data_2D/SII_SIE_SEE_systems:\
+\
+\cf4 DataGen_2D.m\cf6  generates \cf7 Data_II_sym.mat\cf0 , \cf7 Data_IE_sym\cf9 .mat, Data_EE_sym.mat, Data_II_asym.mat, Data_IE_asym.mat, Data_EE_asym.mat\cf7 \
+\cf0 - functions used: GenConstants_EI, Gillespie_EI, Sparse_Distribution_EI\
+\
+\cf4 ModeSearch_on_data.m\cf0  generates \cf7 Data_II_sym_modes.mat\cf0 , \cf7 Data_IE_sym_modes.mat\cf0 , \cf7 Data_EE_sym_modes.mat, Data_II_asym_modes.mat\cf0 , \cf7 Data_IE_asym_modes.mat\cf0 , \cf7 Data_EE_asym_modes.mat\cf0 \
+- functions used: LargestMode_complete_alg\
+\cf2 \
+\cf4 LNA_2D_sym_and_asym.m \cf6 generates\cf4  \cf0  \cf9 Data_II_sym_LNA.mat, Data_IE_sym_LNA.mat, Data_EE_sym_LNA.mat, Data_II_asym_LNA.mat, Data_IE_asym_LNA.mat, Data_EE_asym_LNA.\
+\cf0 - functions used: automatic_LNA\
+\cf2 \
+FOLDER scripts/data_generation/data_3D/Asymm_inhibitory/GillespieSimulation:\
+\
+\cf4 DataGen_inh_asymm_3D.jl\cf9  \cf6 generates\cf9  A1_gill_asymm_inh.mat, A2_gill_asymm_inh.mat, A3_gill_asymm_inh.mat, A4_gill_asymm_inh.mat, A5_gill_asymm_inh.mat, A6_gill_asymm_inh.mat, A7_gill_asymm_inh.mat\cf2 \
+\cf0 - functions used: \cf6 Wlist_funct.jl, function ssa from https://github.com/monikajozsa/Gillespie.jl\
+\cf2 \
+FOLDER scripts/data_generation/data_3D/Asymm_inhibitory/GillespieSimulation/LargestModeWeight:\
+\
+\cf4 ModeSearch_3D_asymm_inh.m \cf6 generates\cf4  \cf9 LMW_3D_inh_asymm.mat\cf4 \
+\cf0 - functions used: LargestMode_complete_alg, H1D_to_H\
+\pard\pardeftab720\partightenfactor0
+\cf6 - data files used: A1_gill_asymm_inh.mat, A2_gill_asymm_inh.mat, A3_gill_asymm_inh.mat, A4_gill_asymm_inh.mat, A5_gill_asymm_inh.mat, A6_gill_asymm_inh.mat, A7_gill_asymm_inh.mat\cf2 \
+\
+FOLDER scripts/data_generation/data_3D/Asymm_inhibitory/LinearNoiseApproximation:\
+\pard\pardeftab720\partightenfactor0
+\cf4 LNA_lambda_kIE.jl \cf6 generates\cf4  \cf9 A1_lna_v4.mat, A2_lna_v4.mat, A3_lna_v4.mat, A4_lna_v4.mat, A5_lna_v4.mat, A6_lna_v4.mat, A7_lna_v4.mat\cf4 \
+\cf0 - functions used: \cf6 Wlist_funct\
+\cf4 \
+addPout.m \cf6 generates\cf4  \cf9 A1_lna_v4_pout.mat, A2_lna_v4_pout.mat, A3_lna_v4_pout.mat, A4_lna_v4_pout.mat, A5_lna_v4_pout.mat, A6_lna_v4_pout.mat, A7_lna_v4_pout.mat\cf0 \
+- functions used: none\
+- data files used: \cf6 A1_lna_v4.mat, A2_lna_v4.mat, A3_lna_v4.mat, A4_lna_v4.mat, A5_lna_v4.mat, A6_lna_v4.mat, A7_lna_v4.mat\cf3 \
+\cf2 \
+FOLDER scripts/data_generation/data_3D/Symm_inh_exc/GillespieSimulation:\
+\cf4 DataGen_3D_gill_omega.jl \cf6 generates \cf9 A1_gill_omega.mat, A2_gill_omega.mat, A3_gill_omega.mat, A4_gill_omega.mat, A5_gill_omega.mat, A6_gill_omega.mat, A7_gill_omega.mat\cf2 \
+\cf0 - functions used: \cf6 Wlist_funct.jl, function ssa from https://github.com/monikajozsa/Gillespie.jl\
+\cf2 \
+FOLDER scripts/data_generation/data_3D/Symm_inh_exc/GillespieSimulation/LargestModeWeight:\
+\cf4 Omega_symm_inh_3D_mode_search.m\cf2  \cf6 generates\cf2  \cf9 Data_A1_mode.mat, Data_A2_mode.mat, Data_A3_mode.mat, Data_A4_mode.mat, Data_A5_mode.mat, Data_A6_mode.mat, Data_A7_mode.mat\
+\cf0 - functions used: LargestMode_complete_alg\
+- data files used: \cf6 A1_gill_omega.mat, A2_gill_omega.mat, A3_gill_omega.mat, A4_gill_omega.mat, A5_gill_omega.mat, A6_gill_omega.mat, A7_gill_omega.mat\cf0 \
+\cf2 \
+FOLDER scripts/data_generation/data_3D/Symm_inh_exc/LinearNoiseApproximation:\
+\cf4 LNA_3D_inh_exc.m\cf7  \cf6 generates\cf7  \cf9 Data_A1_LNA, Data_A1_LNA, Data_A1_LNA, Data_A1_LNA, Data_A1_LNA, Data_A1_LNA, Data_A1_LNA\cf0 \
+- functions used: automatic_LNA\
+\cf2 \
+FOLDER scripts/data_generation/data_3D/Symm_inhibitory/GillespieSimulation:\
+\cf4 DataGen_main.m \cf6 generates \cf7 D\cf9 ata_A1_k_001, Data_A1_k_0019, Data_A1_k_0028, Data_A1_k_0037, Data_A1_k_0046, Data_A1_k_0055, Data_A1_k_0064, Data_A1_k_0073, Data_A1_k_0082, Data_A1_k_0091, Data_A2_k_001, Data_A2_k_0019, Data_A2_k_0028, Data_A2_k_0037, Data_A2_k_0046, Data_A2_k_0055, Data_A2_k_0064, Data_A2_k_0073, Data_A2_k_0082, Data_A2_k_0091, Data_A3_k_001, Data_A3_k_0019, Data_A3_k_0028, Data_A3_k_0037, Data_A3_k_0046, Data_A3_k_0055, Data_A3_k_0064, Data_A3_k_0073, Data_A3_k_0082, Data_A3_k_0091, Data_A4_k_001, Data_A4_k_0019, Data_A4_k_0028, Data_A4_k_0037, Data_A4_k_0046, Data_A4_k_0055, Data_A4_k_0064, Data_A4_k_0073, Data_A4_k_0082, Data_A4_k_0091, Data_A5_k_001, Data_A5_k_0019, Data_A5_k_0028, Data_A5_k_0037, Data_A5_k_0046, Data_A5_k_0055, Data_A5_k_0064, Data_A5_k_0073, Data_A5_k_0082, Data_A5_k_0091, Data_A6_k_001, Data_A6_k_0019, Data_A6_k_0028, Data_A6_k_0037, Data_A6_k_0046, Data_A6_k_0055, Data_A6_k_0064, Data_A6_k_0073, Data_A6_k_0082, Data_A6_k_0091, Data_A7_k_001, Data_A7_k_0019, Data_A7_k_0028, Data_A7_k_0037, Data_A7_k_0046, Data_A7_k_0055, Data_A7_k_0064, Data_A7_k_0073, Data_A7_k_0082, Data_A7_k_0091\
+\cf0 - functions used: GenConstants_EI, Gillespie_EI, Sparse_Distribution_EI\
+\cf4 \
+ModeSearch_from_A1_data.m \cf6 generates \cf9 Data_A1_mode.mat\
+\cf0 - functions used: LargestMode_complete_alg\
+- data files used: \cf6 Data_A1_k_001, Data_A1_k_0019, Data_A1_k_0028, Data_A1_k_0037, Data_A1_k_0046, Data_A1_k_0055, Data_A1_k_0064, Data_A1_k_0073, Data_A1_k_0082, Data_A1_k_0091\cf4 \
+ModeSearch_from_A2_data.m \cf6 generates \cf9 Data_A2_mode.mat\cf4 \
+\cf0 - functions used: LargestMode_complete_alg\
+- data files used: \cf6 Data_A2_k_001, Data_A2_k_0019, Data_A2_k_0028, Data_A2_k_0037, Data_A2_k_0046, Data_A2_k_0055, Data_A2_k_0064, Data_A2_k_0073, Data_A2_k_0082, Data_A2_k_0091\cf4 \
+ModeSearch_from_A3_data.m \cf6 generates \cf9 Data_A3_mode.mat\
+\cf0 - functions used: LargestMode_complete_alg\
+\pard\pardeftab720\partightenfactor0
+\cf6 - \cf0 data \cf6 files used: Data_A3_k_001, Data_A3_k_0019, Data_A3_k_0028, Data_A3_k_0037, Data_A3_k_0046, Data_A3_k_0055, Data_A3_k_0064, Data_A3_k_0073, Data_A3_k_0082, Data_A3_k_0091\cf4 \
+ModeSearch_from_A4_data.m \cf6 generates \cf9 Data_A4_mode.mat\
+\pard\pardeftab720\partightenfactor0
+\cf0 - functions used: LargestMode_complete_alg\cf4 \
+\pard\pardeftab720\partightenfactor0
+\cf6 - \cf0 data \cf6 files used: Data_A4_k_001, Data_A4_k_0019, Data_A4_k_0028, Data_A4_k_0037, Data_A4_k_0046, Data_A4_k_0055, Data_A4_k_0064, Data_A4_k_0073, Data_A4_k_0082, Data_A4_k_0091\cf4 \
+ModeSearch_from_A5_data.m \cf6 generates \cf9 Data_A5_mode.mat\
+\pard\pardeftab720\partightenfactor0
+\cf0 - functions used: LargestMode_complete_alg\
+\pard\pardeftab720\partightenfactor0
+\cf6 - \cf0 data \cf6 files used: Data_A5_k_001, Data_A5_k_0019, Data_A5_k_0028, Data_A5_k_0037, Data_A5_k_0046, Data_A5_k_0055, Data_A5_k_0064, Data_A5_k_0073, Data_A5_k_0082, Data_A5_k_0091\cf4 \
+ModeSearch_from_A6_data.m \cf6 generates \cf9 Data_A6_mode.mat\
+\pard\pardeftab720\partightenfactor0
+\cf0 - functions used: LargestMode_complete_alg\
+\pard\pardeftab720\partightenfactor0
+\cf6 - \cf0 data \cf6 files used: Data_A6_k_001, Data_A6_k_0019, Data_A6_k_0028, Data_A6_k_0037, Data_A6_k_0046, Data_A6_k_0055, Data_A6_k_0064, Data_A6_k_0073, Data_A6_k_0082, Data_A6_k_0091\cf4 \
+ModeSearch_from_A7_data.m \cf6 generates \cf9 Data_A7_mode.mat\cf2 \
+\pard\pardeftab720\partightenfactor0
+\cf0 - functions used: LargestMode_complete_alg\
+\pard\pardeftab720\partightenfactor0
+\cf6 - \cf0 data \cf6 files used: Data_A7_k_001, Data_A7_k_0019, Data_A7_k_0028, Data_A7_k_0037, Data_A7_k_0046, Data_A7_k_0055, Data_A7_k_0064, Data_A7_k_0073, Data_A7_k_0082, Data_A7_k_0091\cf0 \
+\pard\pardeftab720\partightenfactor0
+\cf2 \
+FOLDER scripts/data_generation/data_3D/Symm_inhibitory/LinearNoiseApproximation:\
+\cf4 DataGen_LNA3D_symm_inh.m\cf7  \cf6 generates\cf9  Data_A1_k_001.mat, Data_A2_k_001.mat, Data_A3_k_001.mat, Data_A4_k_001.mat, Data_A5_k_001.mat, Data_A6_k_001.mat, Data_A7_k_001.mat\
+\pard\pardeftab720\partightenfactor0
+\cf6 - functions used: automatic_LNA\cf0 \
+\
+\pard\pardeftab720\partightenfactor0
+\cf2 FOLDER Examples\cf0 \
+Contains examples to use some basic functions from the ones listed above\
+\
+\
+\
+\
+\cf2 \
+\
+}
