@@ -1,4 +1,4 @@
-function [MaxMode,NofModes,points_mode_id,Mode_peaks,Mode_centers] = LargestMode_complete_alg_v2(H,W,H_1D,Prop_th,xbar,CoordScale_for_dist)
+function [MaxMode,NofModes,points_mode_id,Mode_peaks,Mode_centers] = LargestMode_complete_alg(H,W,H_1D,Prop_th,xbar,CoordScale_for_dist)
     %% This is the main function for the mode-search algorithm
     %% The algorithm first focuses on finding peaks of the modes, then it allocates mode ID for all local max based on pointers to the peaks - (this is the hardest part to follow, the pointers!), the remaining grid points get mode ID based on the mode ID of local max and an up-hill algorithm
     % Steps: 
@@ -52,7 +52,7 @@ function [MaxMode,NofModes,points_mode_id,Mode_peaks,Mode_centers] = LargestMode
     % scatter(Rmix(:,1),Rmix(:,2))
     % title('Non-standard points partially scaled to standard points')
     
-    if ~exists('CoordScale_for_dist','var')
+    if ~exist('CoordScale_for_dist','var')
         CoordScale_for_dist=0; %this is applied most of the time: there is no scaling of point coordinates (which would be based on the covariance of the distribution) before calculating the distance between points
     end
     %% Step 1
@@ -117,8 +117,8 @@ function [MaxMode,NofModes,points_mode_id,Mode_peaks,Mode_centers] = LargestMode
         dist_th=0.1;
     end
     %% Exclude local maxima from mode peak selection that are close to a larger local maximum
-    [kept_lmax_sub, kept_lmax_val, kept_lmax_ind_lm, ~, lm2clp_pointer_lm] = DropingCloseLocMax_v2(local_max_sub,local_max_val,[],dist_th,H,W,CoordScale_for_dist);
-    %     [kept_lmax_sub, kept_lmax_val, kept_lmax_ind_lm, ~, lm2clp_pointer_lm, ~] = DropingCloseLocMax(local_max_sub,local_max_val,[],dist_th,0);
+%     [kept_lmax_sub, kept_lmax_val, kept_lmax_ind_lm, ~, lm2clp_pointer_lm] = DropingCloseLocMax_v2(local_max_sub,local_max_val,[],dist_th,H,W,CoordScale_for_dist);    
+    [kept_lmax_sub, kept_lmax_val, kept_lmax_ind_lm, ~, lm2clp_pointer_lm] = DropingCloseLocMax(local_max_sub,local_max_val,[],dist_th,H,W,CoordScale_for_dist);
     kept_lmax_ind_gl=local_max_ind_gl(kept_lmax_ind_lm); %global indices of the remaining local maxima
     
     %% Step 4: Peak selection

@@ -7,7 +7,7 @@ function [local_max_sub, local_max_val, p_ind, p_pointer, clp_pointer, max_Nmode
 % dist : distance
 % p_ : point
 
-if ~exists('CoordScale_for_dist','var')
+if ~exist('CoordScale_for_dist','var')
     CoordScale_for_dist=0; %this is applied most of the time: there is no scaling of point coordinates (which would be based on the covariance of the distribution) before calculating the distance between points
 end
 
