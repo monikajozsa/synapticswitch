@@ -1,4 +1,4 @@
-The “data” folder contains all the data files. The scripts folder contains all the scripts that generated the files in folder “data”. The “plots” folder contains figures and scripts that generated those figures.
+The scripts folder contains all the scripts that generated the data files. The “plots” folder contains figures and scripts that generated the figures in the main paper and supplementary material. Data files are available upon request.
 
 Below, we list the files in the “scripts” folder folder and add the dependencies of the files. 
 
