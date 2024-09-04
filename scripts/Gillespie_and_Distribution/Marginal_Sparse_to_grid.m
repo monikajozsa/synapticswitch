@@ -1,6 +1,6 @@
 function H  = Marginal_Sparse_to_grid(H_sparse,W_sparse,ind_1_2)
 % this function gives back a non-sparse distribution from a sparse
-% distribution; if the sperse distribution was 3 dimensional, then it gives
+% distribution; if the sparse distribution was 3 dimensional, then it gives
 % back a marginal on the dimensions in ind_1_2
 if ~exist('ind_1_2','var')
     ind_1_2=[1 2];
