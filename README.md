@@ -1,289 +1,271 @@
-The scripts folder contains all the scripts that generated the data files. The “plots” folder contains figures and scripts that generated the figures in the main paper and supplementary material. Data files are available upon request.
+# Documentation on the code related to the paper *Autoregulation of switching behavior by cellular compartment size*
 
-Below, we list the files in the “scripts” folder folder and add the dependencies of the files. 
 
-FOLDER scripts/Gillespie\_and\_Distribution:
+## Table of Contents
+- [Project description](#introduction)
+- [Directory structure](#directory-structure)
 
-function [xbar,W,rate\_constants] = GenConstants\_EI(Nspecies,xbar\_interval,rate\_const\_interval,IE\_ratio, W\_force)
+## Project description
 
-\- functions used: none
+**Contributors**
 
-function [X,T] = Gillespie\_EI(xbar,rate\_constants,N\_steps,N\_realisations)
+This project was conceived and led by Timothy O'Leary and Rodolphe Sepulchre, with code development by Monika Jozsa and Tihol Donchev. We also acknowledge the contributions of Andreas Petrides, Glenn Vinnicombe, and others for their valuable input during preliminary discussions and throughout the project's development.
 
-\- functions used: Rates\_EI
+**Summary**
 
-function rates = Rates\_EI(x,xbar,rate\_constants,eps\_local)
+This repository supports the study, "Autoregulation of switching behavior by cellular compartment size," which investigates how small cellular compartments, such as synaptic spines, can reliably regulate growth and shrinkage through biochemical switches. The paper introduces a new control mechanism demonstrating how the size of a system can navigate between switching and stable behaviour. We leverage that in many biochemical systems where deterministic analysis would predict stable behaviour, stochastic fluctuations can drive reliable biochemical switching. This however, is only true in small systems and as molecular copy numbers increase, stochasticity diminishes, effectively reducing to noise and stabilizing the system. Traditional mass-action kinetics fail to capture this size-dependent, stochastic switching behavior, highlighting the importance of this new approach.
 
-\- functions used: none
+Our proposed control mechanism is especially relevant for synaptic plasticity, where synapse size is thought to function as a key control parameter. 
 
-function [H\_sparse,W\_sparse,H\_sparse\_1D,max\_XX] = Sparse\_Distribution\_EI(X,T)
+![Autoregulation of system size](synaptic_switch_fig1.png)
 
-\- functions used: H\_to\_H1D, H1D\_to\_H
+*a) Schematic of a system with mutually inhibitory interactions between two species. 
+b) Illustration of size-dependent behaviour of the mutually inhibitory system in a).
+c) Diagram of our proposed control mechanism for auto-regulation of system size.*
 
-function H = H1D\_to\_H(H\_1D,Nspecies)
+We mdoel chemical reaction systems by birth-death processes with Mischaelis-Menten like kinetics for the inhibitory and excitatory propensities between species. We restrict our attention to simple two- and three-species reaction systems and explore how inhibition and in particular inhibitory loops contribute to switch-like behavior in small systems. We then demonstrate how autoregulation of system size can be achieved by assigning growth and shrinkage mechanisms to the distinct modes between which these small systems switch. This has potential applications in understanding more complex biochemical pathways and experimental results on synaptic potentiation and depression. Finally, we propose an analytical procedure for estimating uni and mutimodal parameter regimes and evaluate this proedure on two and three species systems. This approach is crucial for analysing higher dimensional systems and large parameter regimes where both simulations and experiments are infeasible.
 
-\- functions used: none
+This repository contains the scripts and data files used to generate the results presented in the _PNAS_ paper _Autoregulation of switching behavior by cellular compartment size_ and its supplementary materials. Below is an overview of the directory structure and a detailed list of scripts, along with their dependencies.
 
-function H\_1D = H\_to\_H1D(H,max\_grid)
+## Directory Structure
 
-\- functions used: none
+There are two main folders, `scripts/` and `plots/`. `scripts` contains all the scripts used to generate the data files. `plots` contains all the code and material that is needed to reconstruct the figures of the paper and its supplementary material organized into sub-folders by figure.
 
-function H  = Marginal\_Sparse\_to\_grid(H\_sparse,W\_sparse,ind\_1\_2)
+---
 
-\- functions used: none
+The content of `scripts/` and its short description is listed below.
+  - **Gillespie_and_Distribution/**: Contains functions related to stochastic simulations for the time-evolution of the birth-death processes, distribution calculation from time-series data and sparsifying transformations on the distributions. 
+  - **shared_functions/**: Contains utility functions used across different scripts.
+  - **mode_search/**: Scripts for mode searching in sparse distributions.
+  - **data_generation/**: Scripts for data generation, organized by dimensionality (2D, 3D) and system type (SII/SIE/SEE, symmetric/asymmetric).
+  - **Examples/**: Contains examples demonstrating the use of some of the basic functions listed in the scripts.
 
-FOLDER scripts/shared\_functions:
+<details>
+<summary>Functions in `scripts/Gillespie_and_Distribution`</summary>
 
-function cm\_data=viridis(n\_colors)
+- **`GenConstants_EI`**: Generates rate constants in matrix form for E and I connections. Dependencies: None
 
-\- functions used: none
+- **`Gillespie_EI`**: Gillespie's stochastic simulation algorithm (SSA) with parallel computing for the different realisations. Return time-series for the evolution of the species. Dependencies: `Rates_EI`
 
-function cm\_data=plasma(n\_colors)
+- **`H1D_to_H`**: Converts state-space coordinates with probability greater than 0, from higher dimensional form to one dimensional form Dependencies: None
 
-\- functions used: none
+- **`H_to_H1D`**: Converts state-space coordinates with probability greater than 0, from one dimensional form to higher dimensional form. Dependencies: None
 
-function colors = distinguishable\_colors(n\_colors,bg,func)
+- **`Marginal_Sparse_to_grid`**: Converts a sparse distribution to a non-sparse grid distribution. If the sparse distribution was three dimensional, then it returns a marginal on the required dimensions. Dependencies: None
 
-\- functions used: none
+- **`Rates_EI`**: Calculates rates for each connection from constants. Dependencies: None
 
-function W = W\_list(Nspecies,nA)
+- **`Sparse_Distribution_EI`**: Calculates sparse distributions from time-series data. Dependencies: `H_to_H1D`, `H1D_to_H`
 
-\- functions used: none
 
-function L = LogMat(n,allS)
+</details>
 
-\- functions used: none
+<details>
+<summary>Content of `scripts/shared_functions`</summary>
 
-function h = error\_ellipse(covariance\_mtx,mean\_vec)
+- **`viridis, plasma, magma`**: Functions to generate basic color maps.
+  - Dependencies: None
 
-\- functions used: none
+- **`distinguishable_colors`**: Generates colormap with distinguishable colors.
+  - Dependencies: None
 
-function Center = Sparse\_Distribution\_weighted\_mean(H\_sparse,W\_sparse,isShifted)
+- **`W_list`**: Generates a list of possible connectivity structures for 2D or 3D systems.
+  - Dependencies: None
 
-\- functions used: none
+- **`LogMat`**: Generates a matrix, where each row represents one possible combination of n elements from a set S, where n and S are inputs.
+  - Dependencies: None
 
-function [nn\_eq,Cov\_LNA,P\_out] = automatic\_LNA(k,x\_bar,W,epsilon,lambda)
+- **`error_ellipse`**: Plots error ellipses based on covariance matrices.
+  - Dependencies: None
 
-\- functions used: none
+- **`Sparse_Distribution_weighted_mean`**: Calculates the weighted mean of a sparse distribution.
+  - Dependencies: None
 
-function [Weighted\_Cov,Weighted\_Mean] = Sparse\_Distribution\_weighted\_cov(H\_sparse,W\_sparse, Weighted\_Mean)
+- **`automatic_LNA`**: Runs the analytical Linear Noise Approximation (LNA) on a system. Returns the equilibrium, the estimated covariance and the probability outside the axes based on a Gaussian approximation of the stationary distribution.
+  - Dependencies: None
 
-\- functions used: Sparse\_Distribution\_weighted\_mean
+- **`arc_arrow`**: Draws a curved arrow between two points. 
+  - Dependencies: None
 
-function [] = Plot\_stationary\_distrib(H,W,Nspecies)
+- **`Sparse_Distribution_weighted_cov`**: Calculates the weighted covariance of a sparse distribution.
+  - Dependencies: `Sparse_Distribution_weighted_mean`
 
-\- functions used: Marginal\_Sparse\_to\_grid
+- **`Plot_stationary_distrib`**: Plots 2D or 3D stationary distributions.
+  - Dependencies: `Marginal_Sparse_to_grid`
 
-FOLDER scripts/mode\_search:
+- **`Woodford_Altman_github_repo`**: A toolbox for exporting figures from MATLAB to standard image and document formats.
+  - Dependencies: None
+</details>
 
-function [D\_vec, clp\_ind] = Closest\_larger\_point(local\_max\_sub,local\_max\_val,selected\_ind)
 
-\- functions used: none
+<details>
+<summary>Function in `scripts/mode_search`</summary>
 
-function loc\_max\_mode\_id = loc\_max\_mode\_id\_from\_kept(loc\_max\_mode\_id,local\_max\_sub,kept\_lmax\_ind,clp\_pointer)
+- **`Closest_larger_point`**: Finds the closest larger local max among the selected local max. Dependencies: None
 
-\- functions used: none
+- **`DropingCloseLocMax`**: Refines a set of local maxima by removing those that are too close to each other, keeping only the most significant maxima. Dependencies: `Sparse_Distribution_weighted_cov`, `Closest_larger_point`
 
-function min\_ridge\_val = RidgeMin(point\_from\_ind, point\_to\_ind, H\_sparse, W\_sparse, neighbours\_ind)
+- **`LargestMode_complete_alg`**: Main function for the mode-search algorithm. The algorithm first finds peaks of potential modes. Then it allocates mode ID for all local max based on pointers to the peaks. Then it allocates mode ID to the remaining grid points based on the mode ID of a local max that is found with an up-hill algorithm. Dependencies: `Sparse_Distribution_Ext_local_max_1D`, `Sparse_Distribution_weighted_cov`, `Closest_larger_point`, `DropingCloseLocMax`, `Peak_Selection`, `loc_max_mode_id_from_kept`, `Sparse_Distribution_pointer_point_ID`, `Sparse_Density_Mode_Features`
 
-\- functions used: none
+- **`Local_Averaging`**: Performs a local averaging operation on a sparse distribution and identifies local maxima. Dependencies: `Sparse_Distribution_Ext_local_max_1D`
 
-function points\_id = Sparse\_Distribution\_pointer\_point\_ID(H\_sparse\_1D,W\_sparse,local\_max\_ind, neighbours\_val,neighbours\_ind,max\_neighbour\_ind\_nb)
+- **`ModeSelection`**: Identifies and selects significant local maxima from a sparse distribution. It applies filtering and merging processes to handle close maxima and then classifies all grid points based on these selected peaks. It involves finding local maxima, filtering out close peaks, sorting and selecting the most prominent ones, and assigning mode IDs to each grid point based on their proximity to these peaks. Dependencies: `Sparse_Distribution_Ext_local_max_1D`, `DropingCloseLocMax`, `Local_Averaging`, `H_to_H1D`, `Peak_Selection`, `Closest_larger_point`, `loc_max_mode_id_from_kept`, `Sparse_Distribution_pointer_point_ID`
 
-\- functions used: none
+- **`Peak_Selection_v4`**: Selects the most significant peaks from a set of local maxima based on a combination of their values, distances, and valley measures, with an option to limit the number of selected peaks. It calculates normalized distances and valley measures, evaluates peaks using a composite score, and sorts them to return the top peaks according to the specified criteria. Dependencies: `Sparse_Distribution_weighted_cov`, `RidgeMin`
 
-function [Mode\_weights,Mode\_peaks,Mode\_centers] = Sparse\_Density\_Mode\_Features(H\_sparse, W\_sparse, points\_mode\_id)
+- **`RidgeMin`**: Calculates the lowest point along a 'ridge' path between two points by moving from one point to the other along a strictly monotonic path that always approaches the other point, ensuring the path follows the ridge formed by local maxima. Dependencies: None
 
-\- functions used: Sparse\_Distribution\_weighted\_mean
+- **`Sparse_Density_Mode_Features`**:  Computes the centers, weights, and peak values of modes from a sparse density and the corresponding point mode IDs. It calculates the weighted mean for each mode, sums up the weights, and identifies the maximum peak value for each mode. Dependencies: `Sparse_Distribution_weighted_mean`
 
-function [neighbours\_1D, neighbours\_val, neighbours\_ind] = Sparse\_Distribution\_Ext\_neighbours\_1D(H\_sparse\_1D,W\_sparse,grid\_max)
+- **`Sparse_Distribution_Ext_local_max_1D`**: Identifies local maxima in a sparse distribution, computing their coordinates, values, and corresponding 1D encodings. It also determines neighboring points and their values, providing indices for the local maxima and their neighbors based on the input sparse matrices and 1D representations. Dependencies: `Sparse_Distribution_Ext_neighbours_1D`
 
-\- functions used: LogMat
+- **`Sparse_Distribution_Ext_neighbours_1D`**: Calculates the 1D-coded coordinates, values, and indices of neighbors for each grid point in a sparse distribution. It determines neighboring points by adjusting the original 1D coordinates with small changes, and then maps these adjusted coordinates to the actual neighbors in the sparse dataset, retrieving their corresponding values and indices. Dependencies: `LogMat`
 
-function [local\_max\_sub, local\_max\_val,local\_max\_1D, local\_max\_ind, neighbours\_1D, neighbours\_val, neighbours\_ind, max\_neighbour\_local\_ind] = Sparse\_Distribution\_Ext\_local\_max\_1D(H\_sparse, W\_sparse, H\_sparse\_1D)
+- **`Sparse_Distribution_pointer_point_ID`**: Assigns unique IDs to points in a sparse distribution by using a pointer algorithm that propagates labels from local maxima to neighboring points. It iteratively updates point IDs based on the maximum neighbor values and includes a fallback mechanism to label any remaining isolated points. Dependencies: None
 
-\- functions used: Sparse\_Distribution\_Ext\_neighbours\_1D
+- **`loc_max_mode_id_from_kept`**: assigns mode IDs to local maxima by first propagating IDs from already assigned maxima to their closest unassigned neighbors, and then filling any remaining unassigned maxima by copying the mode ID from their nearest assigned maxima. Dependencies: None
 
-function [W\_sparse\_filt,local\_max\_sub, local\_max\_val,local\_max\_ind, neighbours\_1D, neighbours\_val, neighbours\_ind, max\_neighbour\_local\_ind] = Local\_Averaging(W\_sparse, H\_sparse, H\_sparse\_1D, neighbours\_val)
+</details>
 
-\- functions used: Sparse\_Distribution\_Ext\_local\_max\_1D
+<details>
+<summary>Functions in `scripts/data_generation`</summary>
 
-function [local\_max\_sub, local\_max\_val, p\_ind, p\_pointer, clp\_pointer, max\_Nmodes] = DropingCloseLocMax(local\_max\_sub, local\_max\_val, max\_Nmodes, dist\_th, H, W, CoordScale\_for\_dist)
+The folder has two subfolders data_2D and data_3D.
 
-\- functions used: Sparse\_Distribution\_weighted\_cov, Closest\_larger\_point, 
+#### scripts/data_generation/data_2D
 
-function [peaks\_sub, peaks\_val, peaks\_ind, peaks\_from\_local\_max\_ind] = Peak\_Selection(local\_max\_sub, local\_max\_val, local\_max\_ind, H, W, neighbours\_ind, maxNmodes, CoordScale\_for\_dist)
+##### Data_dwell_time
 
-\- functions used: Sparse\_Distribution\_weighted\_cov, RidgeMin
+- **`DataGen_dwell_time.m`**: Generates dwell times based on systems parameters and saves them to data files.
+  - Dependencies: `GenConstants_EI`, `Gillespie_EI`, `Sparse_Distribution_EI`
+  - Generated Data Files: `Data_dwell_time_distr.mat`, `Data_dwell_time_X.mat`, `Data_dwell_time_T.mat`
 
-function [MaxMode,NofModes,points\_mode\_id,Mode\_peaks,Mode\_centers] = LargestMode\_complete\_alg(H, W, H\_1D, Prop\_th, xbar, CoordScale\_for\_dist)
+##### Dynamic_Toggle_Switch
 
-\- functions used: Sparse\_Distribution\_Ext\_local\_max\_1D, Sparse\_Distribution\_weighted\_cov, Closest\_larger\_point, DropingCloseLocMax\_v2, Peak\_Selection\_v4, loc\_max\_mode\_id\_from\_kept, Sparse\_Distribution\_pointer\_point\_ID, Sparse\_Density\_Mode\_Features, Sparse\_Density\_Mode\_Features
+- **`DataGen_main.m`**: Generates data for dynamic toggle switch.
+  - Dependencies: `GenData_Changing_param`
 
-function points\_mode\_id = ModeSelection(H, W, H\_1D, xbar)
+- **`GenData_Changing_param`**: Generates data for dynamic toggle switch with input with changing parameters and statistics on the generated data.
+  - Dependencies: `GenConstants_EI`, `Gillespie_dyn_inp`, `Avg_Stats_from_data`, `ModeSwitch_ind`
 
--function used: Sparse\_Distribution\_Ext\_local\_max\_1D, DropingCloseLocMax, Local\_Averaging, H\_to\_H1D, Peak\_Selection\_v2, Closest\_larger\_point, loc\_max\_mode\_id\_from\_kept, Sparse\_Distribution\_pointer\_point\_ID
+- **`Gillespie_dyn_inp`**: Gillespie simulation with dynamic input.
+  - Dependencies: `Reaction_funct`
 
-FOLDER scripts/data\_generation/data\_2D/Data\_dwell\_time:
+###### Dynamic_Toggle_Switch/Helper functions
 
-DataGen\_dwell\_time.m: generates Data\_dwell\_time\_distr.mat
+- **`Avg_Stats_from_data`**: Calculates average statistics from data.
+  - Dependencies: None
 
--function used: GenConstants\_EI, Gillespie\_EI, Sparse\_Distribution\_EI
+- **`ModeSwitch_ind`**: Identifies mode switching indices.
+  - Dependencies: None
 
-FOLDER scripts/data\_generation/data\_2D/Dynamic\_Toggle\_Switch
+- **`Reaction_funct`**: Handles reactions in a dynamic input simulation.
+  - Dependencies: `Rates_EI`
 
-DataGen\_main.m: generates Changing\_k.mat, Changing\_delta\_n.mat, Changing\_n\_0.mat, Changing\_t\_act.mat, Changing\_m\_inp.mat, Changing\_t\_per.mat, Changing\_t\_dur.mat, Changing\_x\_0.mat
+- **`Stats_inp_activation`**: Calculates statistics for input activation.
+  - Dependencies: None
 
--function used: GenData\_Changing\_param
+##### SII_SIE_SEE_systems
 
-function [] = GenData\_Changing\_param(Save\_filename,var\_name,var\_values,baseline\_val,N\_realisations,N\_steps,save\_n\_change)
+- **`DataGen_2D.m`**: Generates 2D data for SII/SIE/SEE systems.
+  - Dependencies: `GenConstants_EI`, `Gillespie_EI`, `Sparse_Distribution_EI`
 
--function used: GenConstants\_EI, Gillespie\_dyn\_inp\_v3, Avg\_Stats\_from\_data, ModeSwitch\_ind
+- **`ModeSearch_on_data.m`**: Performs mode search on 2D data.
+  - Dependencies: `LargestMode_complete_alg`
 
-Stats\_inp\_activation
+- **`LNA_2D_sym_and_asym.m`**: Generates LNA data for symmetric and asymmetric systems.
+  - Dependencies: `automatic_LNA`
 
-function [X,T,Xbar\_change,Xbar\_avg,inp\_activation] = Gillespie\_dyn\_inp(xbar,rate\_constants,N\_steps,N\_realisations,modes\_func,mode\_effect\_xbar,mode\_time\_th,inp\_freq,inp\_duration,inp\_rate\_addition,x\_0)
+### scripts/data_generation/data_3D
 
--function used: Reaction\_funct
+#### Asymm_inhibitory/GillespieSimulation
 
-FOLDER scripts/data\_generation/data\_2D/Dynamic\_Toggle\_Switch/Helper functions:
+- **`DataGen_inh_asymm_3D.jl`**: Generates 3D data for asymmetric inhibitory systems.
+  - Dependencies: `Wlist_funct.jl`, `ssa` function from [Gillespie.jl](https://github.com/monikajozsa/Gillespie.jl)
 
-function [Lifetime, Survived, Death\_ind, Blown\_up\_ind] = Avg\_Stats\_from\_data(T,X,N\_real)
+#### Asymm_inhibitory/GillespieSimulation/LargestModeWeight
 
-\- functions used: none
+- **`ModeSearch_3D_asymm_inh.m`**: Searches for the largest mode in 3D asymmetric inhibitory data.
+  - Dependencies: `LargestMode_complete_alg`, `H1D_to_H`
+  - Generated Data Files: `A1_gill_asymm_inh.mat`, `A2_gill_asymm_inh.mat`, `A3_gill_asymm_inh.mat`, `A4_gill_asymm_inh.mat`, `A5_gill_asymm_inh.mat`, `A6_gill_asymm_inh.mat`, `A7_gill_asymm_inh.mat`
 
-function [avgswitch\_ind, avgduration\_ind] = ModeSwitch\_ind(Xbar\_change,N\_realisations)
+#### Asymm_inhibitory/LinearNoiseApproximation
 
-\- functions used: none
+- **`LNA_lambda_kIE.jl`**: Generates LNA data (covariance matrix, and its angle) for asymmetric inhibitory systems.
+  - Dependencies: `Wlist_funct.jl`
+  - Generated Data Files: `A1_lna_v4.mat`, `A2_lna_v4.mat`, `A3_lna_v4.mat`, `A4_lna_v4.mat`, `A5_lna_v4.mat`, `A6_lna_v4.mat`, `A7_lna_v4.mat`
 
-function [x,t,tau,xbar,Xbar\_change,change\_ind,changed\_reac\_happened] = Reaction\_funct(xbar,t,x,r,rate\_constants,tau,mode\_effect\_xbar,change\_ind,mode\_ind,rch\_addition)
+- **`addPout.m`**: Adds Pout data to LNA results.
+  - Dependencies: None
+  - Generated Data Files: `A1_lna_v4.mat`, `A2_lna_v4.mat`, `A3_lna_v4.mat`, `A4_lna_v4.mat`, `A5_lna_v4.mat`, `A6_lna_v4.mat`, `A7_lna_v4.mat`
 
-\- functions used: Rates\_EI
+#### Symm_inh_exc/GillespieSimulation
 
-function [inp\_avgfreq\_inp, inp\_avgduration\_ind] = Stats\_inp\_activation(inp\_activation,N\_realisations)
+- **`DataGen_3D_gill_omega.jl`**: Generates 3D Gillespie data for symmetric inhibitory/excitatory systems.
+  - Dependencies: `Wlist_funct.jl`, `ssa` function from [Gillespie.jl](https://github.com/monikajozsa/Gillespie.jl)
 
-\- functions used: none
+#### Symm_inh_exc/GillespieSimulation/LargestModeWeight
 
-FOLDER scripts/data\_generation/data\_2D/SII\_SIE\_SEE\_systems:
+- **`Omega_symm_inh_3D_mode_search.m`**: Searches for modes in 3D symmetric inhibitory/excitatory data.
+  - Dependencies: `LargestMode_complete_alg`
+  - Generated Data Files: `A1_gill_omega.mat`, `A2_gill_omega.mat`, `A3_gill_omega.mat`, `A4_gill_omega.mat`, `A5_gill_omega.mat`, `A6_gill_omega.mat`, `A7_gill_omega.mat`
 
-DataGen\_2D.m generates Data\_II\_sym.mat, Data\_IE\_sym.mat, Data\_EE\_sym.mat, Data\_II\_asym.mat, Data\_IE\_asym.mat, Data\_EE\_asym.mat
+#### Symm_inh_exc/LinearNoiseApproximation
 
-\- functions used: GenConstants\_EI, Gillespie\_EI, Sparse\_Distribution\_EI
+- **`LNA_3D_inh_exc.m`**: Generates LNA data for 3D symmetric inhibitory/excitatory systems.
+  - Dependencies: `automatic_LNA`
 
-ModeSearch\_on\_data.m generates Data\_II\_sym\_modes.mat, Data\_IE\_sym\_modes.mat, Data\_EE\_sym\_modes.mat, Data\_II\_asym\_modes.mat, Data\_IE\_asym\_modes.mat, Data\_EE\_asym\_modes.mat
+#### Symm_inhibitory/GillespieSimulation 
 
-\- functions used: LargestMode\_complete\_alg
+- **`DataGen_main.m`**: Generates main data for 3D symmetric inhibitory systems.
+  - Dependencies: `GenConstants_EI`, `Gillespie_EI`, `Sparse_Distribution_EI`
 
-LNA\_2D\_sym\_and\_asym.m generates  Data\_II\_sym\_LNA.mat, Data\_IE\_sym\_LNA.mat, Data\_EE\_sym\_LNA.mat, Data\_II\_asym\_LNA.mat, Data\_IE\_asym\_LNA.mat, Data\_EE\_asym\_LNA.
+- **`ModeSearch_from_A1_data.m`**: Searches for modes in data from systems with A1 architecture.
+  - Dependencies: `LargestMode_complete_alg`
+  - Generated Data Files: `Data_A1_k_001`, `Data_A1_k_0019`, `Data_A1_k_0028`, `Data_A1_k_0037`, `Data_A1_k_0046`, `Data_A1_k_0055`, `Data_A1_k_0064`, `Data_A1_k_0073`, `Data_A1_k_0082`, `Data_A1_k_0091`
 
-\- functions used: automatic\_LNA
+- **`ModeSearch_from_A2_data.m`**: Searches for modes in data from systems with A2 architecture.
+  - Dependencies: `LargestMode_complete_alg`
+  - Generated Data Files: `Data_A2_k_001`, `Data_A2_k_0019`, `Data_A2_k_0028`, `Data_A2_k_0037`, `Data_A2_k_0046`, `Data_A2_k_0055`, `Data_A2_k_0064`, `Data_A2_k_0073`, `Data_A2_k_0082`, `Data_A2_k_0091`
 
-FOLDER scripts/data\_generation/data\_3D/Asymm\_inhibitory/GillespieSimulation:
+- **`ModeSearch_from_A3_data.m`**: Searches for modes in data from systems with A3 architecture.
+  - Dependencies: `LargestMode_complete_alg`
+  - Generated Data Files: `Data_A3_k_001`, `Data_A3_k_0019`, `Data_A3_k_0028`, `Data_A3_k_0037`, `Data_A3_k_0046`, `Data_A3_k_0055`, `Data_A3_k_0064`, `Data_A3_k_0073`, `Data_A3_k_0082`, `Data_A3_k_0091`
 
-DataGen\_inh\_asymm\_3D.jl generates A1\_gill\_asymm\_inh.mat, A2\_gill\_asymm\_inh.mat, A3\_gill\_asymm\_inh.mat, A4\_gill\_asymm\_inh.mat, A5\_gill\_asymm\_inh.mat, A6\_gill\_asymm\_inh.mat, A7\_gill\_asymm\_inh.mat
+- **`ModeSearch_from_A4_data.m`**: Searches for modes in data from systems with A4 architecture.
+  - Dependencies: `LargestMode_complete_alg`
+  - Generated Data Files: `Data_A4_k_001`, `Data_A4_k_0019`, `Data_A4_k_0028`, `Data_A4_k_0037`, `Data_A4_k_0046`, `Data_A4_k_0055`, `Data_A4_k_0064`, `Data_A4_k_0073`, `Data_A4_k_0082`, `Data_A4_k_0091`
 
-\- functions used: Wlist\_funct.jl, function ssa from <https://github.com/monikajozsa/Gillespie.jl>
+- **`ModeSearch_from_A5_data.m`**: Searches for modes in data from systems with A5 architecture.
+  - Dependencies: `LargestMode_complete_alg`
+  - Generated Data Files: `Data_A5_k_001`, `Data_A5_k_0019`, `Data_A5_k_0028`, `Data_A5_k_0037`, `Data_A5_k_0046`, `Data_A5_k_0055`, `Data_A5_k_0064`, `Data_A5_k_0073`, `Data_A5_k_0082`, `Data_A5_k_0091`
 
-FOLDER scripts/data\_generation/data\_3D/Asymm\_inhibitory/GillespieSimulation/LargestModeWeight:
+- **`ModeSearch_from_A6_data.m`**: Searches for modes  in data from systems with A6 architecture.
+  - Dependencies: `LargestMode_complete_alg`
+  - Generated Data Files: `Data_A6_k_001`, `Data_A6_k_0019`, `Data_A6_k_0028`, `Data_A6_k_0037`, `Data_A6_k_0046`, `Data_A6_k_0055`, `Data_A6_k_0064`, `Data_A6_k_0073`, `Data_A6_k_0082`, `Data_A6_k_0091`
 
-ModeSearch\_3D\_asymm\_inh.m generates LMW\_3D\_inh\_asymm.mat
+- **`ModeSearch_from_A7_data.m`**: Searches for modes in data from systems with A7 architecture.
+  - Dependencies: `LargestMode_complete_alg`
+  - Generated Data Files: `Data_A7_k_001`, `Data_A7_k_0019`, `Data_A7_k_0028`, `Data_A7_k_0037`, `Data_A7_k_0046`, `Data_A7_k_0055`, `Data_A7_k_0064`, `Data_A7_k_0073`, `Data_A7_k_0082`, `Data_A7_k_0091`
 
-\- functions used: LargestMode\_complete\_alg, H1D\_to\_H
+### scripts/data_generation/data_3D/Symm_inhibitory/LinearNoiseApproximation
 
-\- data files used: A1\_gill\_asymm\_inh.mat, A2\_gill\_asymm\_inh.mat, A3\_gill\_asymm\_inh.mat, A4\_gill\_asymm\_inh.mat, A5\_gill\_asymm\_inh.mat, A6\_gill\_asymm\_inh.mat, A7\_gill\_asymm\_inh.mat
+- **`DataGen_LNA3D_symm_inh.m`**: Generates LNA data for 3D symmetric inhibitory systems.
+  - Dependencies: `automatic_LNA`
 
-FOLDER scripts/data\_generation/data\_3D/Asymm\_inhibitory/LinearNoiseApproximation:
+</details>
 
-LNA\_lambda\_kIE.jl generates A1\_lna\_v4.mat, A2\_lna\_v4.mat, A3\_lna\_v4.mat, A4\_lna\_v4.mat, A5\_lna\_v4.mat, A6\_lna\_v4.mat, A7\_lna\_v4.mat
+<details>
+<summary>Content of `scripts/Examples`</summary>
 
-\- functions used: Wlist\_funct
+The `Examples` folder contains sample scripts demonstrating the usage of some of the key functions mentioned above.
 
-addPout.m generates A1\_lna\_v4\_pout.mat, A2\_lna\_v4\_pout.mat, A3\_lna\_v4\_pout.mat, A4\_lna\_v4\_pout.mat, A5\_lna\_v4\_pout.mat, A6\_lna\_v4\_pout.mat, A7\_lna\_v4\_pout.mat
+- **`Example_2D.m`**: Example code for generating and plotting data for II, IE and EE networks of two species.
 
-\- functions used: none
+- **`Example_3D.m`**: Example code for generating and plotting data for a three species network.
 
-\- data files used: A1\_lna\_v4.mat, A2\_lna\_v4.mat, A3\_lna\_v4.mat, A4\_lna\_v4.mat, A5\_lna\_v4.mat, A6\_lna\_v4.mat, A7\_lna\_v4.mat
+</details>
 
-FOLDER scripts/data\_generation/data\_3D/Symm\_inh\_exc/GillespieSimulation:
+---
 
-DataGen\_3D\_gill\_omega.jl generates A1\_gill\_omega.mat, A2\_gill\_omega.mat, A3\_gill\_omega.mat, A4\_gill\_omega.mat, A5\_gill\_omega.mat, A6\_gill\_omega.mat, A7\_gill\_omega.mat
-
-\- functions used: Wlist\_funct.jl, function ssa from <https://github.com/monikajozsa/Gillespie.jl>
-
-FOLDER scripts/data\_generation/data\_3D/Symm\_inh\_exc/GillespieSimulation/LargestModeWeight:
-
-Omega\_symm\_inh\_3D\_mode\_search.m generates Data\_A1\_mode.mat, Data\_A2\_mode.mat, Data\_A3\_mode.mat, Data\_A4\_mode.mat, Data\_A5\_mode.mat, Data\_A6\_mode.mat, Data\_A7\_mode.mat
-
-\- functions used: LargestMode\_complete\_alg
-
-\- data files used: A1\_gill\_omega.mat, A2\_gill\_omega.mat, A3\_gill\_omega.mat, A4\_gill\_omega.mat, A5\_gill\_omega.mat, A6\_gill\_omega.mat, A7\_gill\_omega.mat
-
-FOLDER scripts/data\_generation/data\_3D/Symm\_inh\_exc/LinearNoiseApproximation:
-
-LNA\_3D\_inh\_exc.m generates Data\_A1\_LNA, Data\_A1\_LNA, Data\_A1\_LNA, Data\_A1\_LNA, Data\_A1\_LNA, Data\_A1\_LNA, Data\_A1\_LNA
-
-\- functions used: automatic\_LNA
-
-FOLDER scripts/data\_generation/data\_3D/Symm\_inhibitory/GillespieSimulation:
-
-DataGen\_main.m generates Data\_A1\_k\_001, Data\_A1\_k\_0019, Data\_A1\_k\_0028, Data\_A1\_k\_0037, Data\_A1\_k\_0046, Data\_A1\_k\_0055, Data\_A1\_k\_0064, Data\_A1\_k\_0073, Data\_A1\_k\_0082, Data\_A1\_k\_0091, Data\_A2\_k\_001, Data\_A2\_k\_0019, Data\_A2\_k\_0028, Data\_A2\_k\_0037, Data\_A2\_k\_0046, Data\_A2\_k\_0055, Data\_A2\_k\_0064, Data\_A2\_k\_0073, Data\_A2\_k\_0082, Data\_A2\_k\_0091, Data\_A3\_k\_001, Data\_A3\_k\_0019, Data\_A3\_k\_0028, Data\_A3\_k\_0037, Data\_A3\_k\_0046, Data\_A3\_k\_0055, Data\_A3\_k\_0064, Data\_A3\_k\_0073, Data\_A3\_k\_0082, Data\_A3\_k\_0091, Data\_A4\_k\_001, Data\_A4\_k\_0019, Data\_A4\_k\_0028, Data\_A4\_k\_0037, Data\_A4\_k\_0046, Data\_A4\_k\_0055, Data\_A4\_k\_0064, Data\_A4\_k\_0073, Data\_A4\_k\_0082, Data\_A4\_k\_0091, Data\_A5\_k\_001, Data\_A5\_k\_0019, Data\_A5\_k\_0028, Data\_A5\_k\_0037, Data\_A5\_k\_0046, Data\_A5\_k\_0055, Data\_A5\_k\_0064, Data\_A5\_k\_0073, Data\_A5\_k\_0082, Data\_A5\_k\_0091, Data\_A6\_k\_001, Data\_A6\_k\_0019, Data\_A6\_k\_0028, Data\_A6\_k\_0037, Data\_A6\_k\_0046, Data\_A6\_k\_0055, Data\_A6\_k\_0064, Data\_A6\_k\_0073, Data\_A6\_k\_0082, Data\_A6\_k\_0091, Data\_A7\_k\_001, Data\_A7\_k\_0019, Data\_A7\_k\_0028, Data\_A7\_k\_0037, Data\_A7\_k\_0046, Data\_A7\_k\_0055, Data\_A7\_k\_0064, Data\_A7\_k\_0073, Data\_A7\_k\_0082, Data\_A7\_k\_0091
-
-\- functions used: GenConstants\_EI, Gillespie\_EI, Sparse\_Distribution\_EI
-
-ModeSearch\_from\_A1\_data.m generates Data\_A1\_mode.mat
-
-\- functions used: LargestMode\_complete\_alg
-
-\- data files used: Data\_A1\_k\_001, Data\_A1\_k\_0019, Data\_A1\_k\_0028, Data\_A1\_k\_0037, Data\_A1\_k\_0046, Data\_A1\_k\_0055, Data\_A1\_k\_0064, Data\_A1\_k\_0073, Data\_A1\_k\_0082, Data\_A1\_k\_0091
-
-ModeSearch\_from\_A2\_data.m generates Data\_A2\_mode.mat
-
-\- functions used: LargestMode\_complete\_alg
-
-\- data files used: Data\_A2\_k\_001, Data\_A2\_k\_0019, Data\_A2\_k\_0028, Data\_A2\_k\_0037, Data\_A2\_k\_0046, Data\_A2\_k\_0055, Data\_A2\_k\_0064, Data\_A2\_k\_0073, Data\_A2\_k\_0082, Data\_A2\_k\_0091
-
-ModeSearch\_from\_A3\_data.m generates Data\_A3\_mode.mat
-
-\- functions used: LargestMode\_complete\_alg
-
-\- data files used: Data\_A3\_k\_001, Data\_A3\_k\_0019, Data\_A3\_k\_0028, Data\_A3\_k\_0037, Data\_A3\_k\_0046, Data\_A3\_k\_0055, Data\_A3\_k\_0064, Data\_A3\_k\_0073, Data\_A3\_k\_0082, Data\_A3\_k\_0091
-
-ModeSearch\_from\_A4\_data.m generates Data\_A4\_mode.mat
-
-\- functions used: LargestMode\_complete\_alg
-
-\- data files used: Data\_A4\_k\_001, Data\_A4\_k\_0019, Data\_A4\_k\_0028, Data\_A4\_k\_0037, Data\_A4\_k\_0046, Data\_A4\_k\_0055, Data\_A4\_k\_0064, Data\_A4\_k\_0073, Data\_A4\_k\_0082, Data\_A4\_k\_0091
-
-ModeSearch\_from\_A5\_data.m generates Data\_A5\_mode.mat
-
-\- functions used: LargestMode\_complete\_alg
-
-\- data files used: Data\_A5\_k\_001, Data\_A5\_k\_0019, Data\_A5\_k\_0028, Data\_A5\_k\_0037, Data\_A5\_k\_0046, Data\_A5\_k\_0055, Data\_A5\_k\_0064, Data\_A5\_k\_0073, Data\_A5\_k\_0082, Data\_A5\_k\_0091
-
-ModeSearch\_from\_A6\_data.m generates Data\_A6\_mode.mat
-
-\- functions used: LargestMode\_complete\_alg
-
-\- data files used: Data\_A6\_k\_001, Data\_A6\_k\_0019, Data\_A6\_k\_0028, Data\_A6\_k\_0037, Data\_A6\_k\_0046, Data\_A6\_k\_0055, Data\_A6\_k\_0064, Data\_A6\_k\_0073, Data\_A6\_k\_0082, Data\_A6\_k\_0091
-
-ModeSearch\_from\_A7\_data.m generates Data\_A7\_mode.mat
-
-\- functions used: LargestMode\_complete\_alg
-
-\- data files used: Data\_A7\_k\_001, Data\_A7\_k\_0019, Data\_A7\_k\_0028, Data\_A7\_k\_0037, Data\_A7\_k\_0046, Data\_A7\_k\_0055, Data\_A7\_k\_0064, Data\_A7\_k\_0073, Data\_A7\_k\_0082, Data\_A7\_k\_0091
-
-FOLDER scripts/data\_generation/data\_3D/Symm\_inhibitory/LinearNoiseApproximation:
-
-DataGen\_LNA3D\_symm\_inh.m generates Data\_A1\_k\_001.mat, Data\_A2\_k\_001.mat, Data\_A3\_k\_001.mat, Data\_A4\_k\_001.mat, Data\_A5\_k\_001.mat, Data\_A6\_k\_001.mat, Data\_A7\_k\_001.mat
-
-\- functions used: automatic\_LNA
-
-FOLDER Examples
-
-Contains examples to use some basic functions from the ones listed above
-
-
-
-
-
-
+The folder `plots/` contains sub-folders that are named after figures in the paper. The sub-folders include the relevant figure, and the data and the code that was used to generate the figure.
